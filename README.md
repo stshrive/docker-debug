@@ -4,7 +4,7 @@ Example Repository for attaching to a built Docker container and debugging local
 ## CPP
 To see this eample in action you'll need to build the container. Thie document assumes you have Docker installed on the machine and are familiar with docker commands in general.
 
-1. Build the container: `docker build . --build-arg PROJECT_SRC=<PROJECT_SRC_IN_CONTAINER> -t <IMAGE_NAME>`
+1. Build the container: `docker build . --build-arg PROJECT_SRC=<PROJECT_SRC_IN_CONTAINER> --build-arg USER_ID=$(id -ur) -t <IMAGE_NAME>`
 2. Run the container: `docker run --rm -ti <IMAGE_NAME>`
   > You should be asked for two integer inputs.
   > To make the bug in the code obvious, choose numbers >= 10.
