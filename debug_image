@@ -1,0 +1,12 @@
+#!/bin/bash
+
+IMAGENAME=$1
+MOUNT_SRC=$2
+MOUNT_DST=$3
+
+docker run \
+    --rm \
+    -ti \
+    --mount type=bind,source=${MOUNT_SRC},target=${MOUNT_DST} \
+    ${IMAGENAME} \
+    bash

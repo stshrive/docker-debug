@@ -1,0 +1,55 @@
+FROM ubuntu
+
+RUN apt-get update -qq \
+    && apt-get install -y --no-install-recommends \
+        g++
+
+# Use unique location to pull in project from local machine.
+# We can mount over this location with our local version when
+# using the docker run command to build this on the fly.
+#
+ARG PROJECT_SRC
+
+ENV APP_LIBS /app/lib
+ENv APP_BIN  /app/bin
+
+RUN mkdir -p \
+    ${PROJECT_SRC} \
+    ${APP_LIBS} \
+    ${APP_BIN}
+
+COPY . ${PROJECT_SRC}
+
+RUN    g++ -o ${APP_LIBS}/library.o -c -I${PROJECT_SRC}/include ${PROJECT_SRC}/src/library.cpp \
+    && g++ -o ${APP_LIBS}/main.o    -c -I${PROJECT_SRC}/include ${PROJECT_SRC}/src/main.cpp \
+    && g++ -o ${APP_BIN}/add ${APP_LIBS}/library.o ${APP_LIBS}/main.o
+
+ENV PATH ${PATH}:${APP_BIN}
+
+ARG USER_ID
+# This will create a user with the
+# provided user id. This ID should be set to the same ID
+# as the user building the image. In most cases this is
+# probably 1000. Adding a non-root user will generally 
+# alleviate some issues that arise when editing files that
+# live in the local directories by a root user. In addition
+# to this, you may want to add this user to sudoers and add
+# a password through docker build args.
+#
+RUN useradd \
+    --create-home \
+    --shell /bin/bash \
+    --non-unique \
+    --uid ${USER_ID} \
+    not-root
+
+USER not-root
+WORKDIR /home/not-root
+
+# In order to make sure you can attach to your container, don't set
+# the entrypoint to the application "add". Instead make sure you are
+# executing your application through a shell
+ENTRYPOINT ["/bin/bash", "-c"]
+
+# This will get executed as /bin/bash -c add
+CMD ["add"]
