@@ -28,5 +28,10 @@ ENV PATH ${PATH}:${APP_BIN}
 
 WORKDIR /
 
+# In order to make sure you can attach to your container, don't set
+# the entrypoint to the application "add". Instead make sure you are
+# executing your application through a shell
 ENTRYPOINT ["/bin/bash", "-c"]
+
+# This will get executed as /bin/bash -c add
 CMD ["add"]
