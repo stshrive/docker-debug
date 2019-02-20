@@ -9,19 +9,20 @@ RUN apt-get update -qq \
 # We can mount over this location with our local version when
 # using the docker run command to build this on the fly.
 #
-ENV PROJECT_MNT /app/mnt
+ARG PROJECT_SRC
+
 ENV APP_LIBS /app/lib
 ENv APP_BIN  /app/bin
 
 RUN mkdir -p \
-    ${PROJECT_MNT} \
+    ${PROJECT_SRC} \
     ${APP_LIBS} \
     ${APP_BIN}
 
-COPY . ${PROJECT_MNT}
+COPY . ${PROJECT_SRC}
 
-RUN    g++ -o ${APP_LIBS}/library.o -c -I${PROJECT_MNT}/include ${PROJECT_MNT}/src/library.cpp \
-    && g++ -o ${APP_LIBS}/main.o -c -I${PROJECT_MNT}/include ${PROJECT_MNT}/src/main.cpp \
+RUN    g++ -o ${APP_LIBS}/library.o -c -I${PROJECT_SRC}/include ${PROJECT_SRC}/src/library.cpp \
+    && g++ -o ${APP_LIBS}/main.o    -c -I${PROJECT_SRC}/include ${PROJECT_SRC}/src/main.cpp \
     && g++ -o ${APP_BIN}/add ${APP_LIBS}/library.o ${APP_LIBS}/main.o
 
 ENV PATH ${PATH}:${APP_BIN}
