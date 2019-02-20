@@ -20,6 +20,7 @@ To see this eample in action you'll need to build the container. Thie document a
    - The name of the image built from step 1.
    - The local directory where the application code resides.
    - The location in the container where you are mounting your local application directory.
-  > You should get dropped into the container and you can cd into `$PROJECT_MNT`.
+  > You should get dropped into the container and you can cd into whatever you set
+  > `<PROJECT_SRC_IN_CONTAINER>` to.
   > From there, make changes to the `library.cpp` file (or add a new document)
   > and you can see the changes reflected on your local machine.
